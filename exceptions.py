@@ -1,0 +1,2 @@
+class CrudException(Exception):
+    pass
