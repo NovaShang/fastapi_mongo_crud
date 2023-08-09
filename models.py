@@ -24,3 +24,15 @@ class CountResult(BaseModel):
 class AddResult(BaseModel):
     """返回值基类"""
     id: str
+
+
+class TokenDetail(BaseModel):
+    """Token详细信息,可以和jwt互相转换"""
+    user_id: str
+    name: str
+    project_id: Optional[str]
+    phone: str
+    post_id: Optional[str]
+    role_ids: list[str]
+    auths: list[str]
+    is_root: bool
