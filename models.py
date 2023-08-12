@@ -32,7 +32,6 @@ class TokenDetail(BaseModel):
     name: str
     project_id: Optional[str]
     phone: str
-    post_id: Optional[str]
     role_ids: list[str]
     auths: list[str]
     is_root: bool
