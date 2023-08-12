@@ -4,7 +4,7 @@ from beanie import init_beanie
 from fastapi import FastAPI
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import settings
-from .dependencies import root_required, auth_required, login_required
+from .auth import root_required, auth_required, login_required
 from .exceptions import CrudException
 from .models import DbModelBase, TokenDetail, AddResult, CountResult
 from .utils import add, add_name, add_name_list, find, find_one, make_query, update, remove, raise_if_exists, count

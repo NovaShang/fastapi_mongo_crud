@@ -1,8 +1,11 @@
 from typing import Optional
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, FastAPI, Request
 from fastapi_jwt_auth import AuthJWT
 from fastapi.security import HTTPBearer
+from fastapi_jwt_auth.exceptions import AuthJWTException
+from starlette.responses import JSONResponse
 
+from config import settings
 from .models import TokenDetail
 
 
@@ -32,3 +35,14 @@ def root_required(jwt: AuthJWT = Depends(), b=Depends(HTTPBearer())):
     jwt.jwt_required()
     if not jwt.get_raw_jwt()["is_root"]:
         raise HTTPException(status_code=401, detail="需要超级管理员权限")
+
+
+def init_auth(app: FastAPI, prefix: str = "/api/v1/auth"):
+    @AuthJWT.load_config
+    def get_config():
+        return settings
+
+    # 异常处理
+    @app.exception_handler(AuthJWTException)
+    def auth_exception_handler(request: Request, exc: AuthJWTException):
+        return JSONResponse(status_code=exc.status_code, content={"detail": exc.message})
