@@ -1,5 +1,4 @@
-from fastapi import HTTPException
-from starlette.staticfiles import StaticFiles
+from starlette.staticfiles import StaticFiles, HTTPException
 
 
 class SPAStaticFiles(StaticFiles):
