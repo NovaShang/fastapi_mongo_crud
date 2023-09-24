@@ -25,11 +25,11 @@ async def count(query: FindMany[TDbModel], project_id: str = None, filter_str: s
 
 
 async def find_one(query: FindMany[TDbModel], project_id: str = None,
-                   include_shared=False) -> TDbModel:
+                   include_shared=False, no_raise=False) -> TDbModel:
     """按id查询单条数据的工具函数"""
     query = make_query(query, project_id, include_shared=include_shared)
     db_data: Optional[TDbModel] = await query.first_or_none()
-    if db_data is None:
+    if db_data is None and not no_raise:
         raise CrudException("找不到数据")
     return db_data
 
@@ -52,9 +52,11 @@ async def update(update_dict: dict, query: FindMany[TDbModel], project_id: str =
     await db_data.update({"$set": update_dict})
 
 
-async def remove(query: FindMany[TDbModel], project_id: str = None, fake_delete=False):
+async def remove(query: FindMany[TDbModel], project_id: str = None, fake_delete=False, no_raise=False):
     """删除数据的工具函数"""
-    db_data = await find_one(query, project_id)
+    db_data = await find_one(query, project_id, no_raise=no_raise)
+    if db_data is None:
+        return
     if fake_delete:
         await db_data.update({"$set": {"deleted": True}})
     else:
